@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django import forms
+
 
 """
 1. def login 뷰를 생성
@@ -10,12 +12,20 @@ from django.contrib.auth import authenticate, login
 4. login 뷰에서는 member/login.html 파일을 렌더함
 5. settings.py에 TEMPLATE_DIR 변수를 할당하고 추가
 
-과제 폼을 이용해 정상적으로 동작하게 해오기
+과제 : 폼을 이용해 정상적으로 동작하게 해오기
 html파일에서 POST 요청을 보내기 위해서 form을 정의하고
 input 요소 2개의 name을 username, password로 설정하고
 button type submit을 실행
 (login.html에 작성하면됨)
 """
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=50)
+    password = forms.CharField(
+        label='비밀번호',
+        widget=forms.PasswordInput
+    )
 
 
 def login(request):
@@ -24,6 +34,11 @@ def login(request):
     POST일 때는 authenticate, login을 거치는 로직을 실행
     GET일 때는 member/login.html을 render하여 return 한다.
     """
+    form = LoginForm()
+    context = {
+        'form': form,
+    }
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -37,4 +52,5 @@ def login(request):
             return HttpResponse('Login Failed')
     # GET method 요청이 온 경우
     else:
-        return render(request, 'member/login.html')
+        # return render(request, 'member/login.html')
+        return render(request, 'member/login.html', context)
