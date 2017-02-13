@@ -54,7 +54,7 @@ class MyUser(models.Model):
         users = MyUser.objects.filter(username__startswith='User')
         for index, user in enumerate(users):
             # 글로벌 변수를 할당하기 위해서 메인 모듈에서 하는 것
-            # __main__ 모듈에 'u1, uw, u3, ...' 이름으로 각 MyUser객체를 할당
+            # __main__ 모듈에 'u1, u2, u3, ...' 이름으로 각 MyUser객체를 할당
             setattr(module, 'u{}'.format(index + 1), user)
 
     def follow(self, user):
