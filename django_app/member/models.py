@@ -11,13 +11,13 @@ class MyUser(models.Model):
     email = models.EmailField('이메일', blank=True)
     date_joined = models.DateField('가입한 날짜', auto_now_add=True)
     last_modified = models.DateField('수정한 날짜', auto_now=True)
-
-    # following = models.ManyToManyField(
-    #     'self',
-    #     verbose_name='Following User',
-    #     symmetrical=False,
-    #     blank=True,
-    # )
+    following = models.ManyToManyField(
+        'self',
+        verbose_name='Following User',
+        related_name='follower_set',
+        symmetrical=False,
+        blank=True,
+    )
 
     def __str__(self):
         return self.username
@@ -57,16 +57,20 @@ class MyUser(models.Model):
             # __main__ 모듈에 'u1, uw, u3, ...' 이름으로 각 MyUser객체를 할당
             setattr(module, 'u{}'.format(index + 1), user)
 
-
-    def follow(self, myuser):
-        pass
+    def follow(self, user):
+        self.following.add(user)
 
     def unfollow(self, myuser):
-        pass
+        self.following.remove(user)
 
+    # follower는 수정할 수 없으므로,
+    # property를 이용해 읽기 전용으로 쓰는게 좋음
     @property
     def followers(self):
-        pass
+        return self.follower_set.all()
 
-    def change_nickname(self):
-        pass
+    # 위에 3개 메서드는 Many to Many를 다루기 때문에 save가 필요 없지만,
+    # 이 메서드는 필요함
+    def change_nickname(self, new_nickname):
+        self.nickname = new_nickname
+        self.save()
