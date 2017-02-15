@@ -14,7 +14,7 @@ class Post(models.Model):
     )
 
     def __str__(self):
-        return 'Post[{]]'.format(self.id)
+        return 'Post[{}]'.format(self.id)
 
     def toggle_like(self, user):
         # 중간자 모델을 사용하기 때문에 PostLike 중간자 모델 매니저를 사용
