@@ -7,6 +7,7 @@ Post List를 보여주는 화면을 구성
 5. '/post/'로 접속했을 때, post_list View에 연결되도록 post/urls.py에 내용을 작성
 6. 전체 Post를 가져오는 쿼리셋을 context로 넘기도록 post_list뷰에 구현
 7. post_list.html에서 {% for %} 태그를 사용해 post_list의 내용을 순회하며 표현
+
 """
 
 from django.shortcuts import render
