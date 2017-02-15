@@ -17,4 +17,10 @@
     {% else %}
         <p>No comments</p>
     {% endif %}
+
+    <!-- Comment Form -->
+    <form action="{% url 'post:comment_add' post_id=post.id %}" method="POST">{% csrf_token %}
+        <input type="text" name="content">
+        <button type="submit">Write comment</button>
+    </form>
 </div>
