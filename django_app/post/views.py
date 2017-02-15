@@ -8,6 +8,12 @@ Post List를 보여주는 화면을 구성
 6. 전체 Post를 가져오는 쿼리셋을 context로 넘기도록 post_list뷰에 구현
 7. post_list.html에서 {% for %} 태그를 사용해 post_list의 내용을 순회하며 표현
 
+Post Detail (하나의 Post에 대한 상세화면
+1. View에 post_detail 함수 작성
+2~4. 위와 같음
+5. '/post/<숫자>/'로 접속했을 때 post_detail View에 연결되도록 post/urls.py에 내용 작성
+이 때, post_id 라는 패턴명을 가지도록 정규표현식 작성
+6. url인자로 전달받은 post_id에 해당하는 Post객체를 context에 넘겨 post_detail 화면을 구성
 """
 
 from django.shortcuts import render
@@ -20,3 +26,11 @@ def post_list(request):
         'posts': posts
     }
     return render(request, 'post/post_list.html', context)
+
+
+def post_detail(request, post_id):
+    post = Post.objects.get(id=post_id)
+    context = {
+        'post': post
+    }
+    return render(request, 'post/post_detail.html', context)
