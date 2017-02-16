@@ -16,6 +16,9 @@ class Post(models.Model):
     def __str__(self):
         return 'Post[{}]'.format(self.id)
 
+    class Meta:
+        ordering = ('-id',)
+
     def toggle_like(self, user):
         # 중간자 모델을 사용하기 때문에 PostLike 중간자 모델 매니저를 사용
         # 핵심은 중간자 모델을 거쳐서 해야한다는 것이다.
@@ -32,9 +35,9 @@ class Post(models.Model):
         else:
             PostLike.objects.create(post=self, user=user)
 
-        # 파이썬 삼항연산자
-        # [True일 경우 실행할 구문] if 조건문 else [False일 경우 실행할 구문]
-        # return PostLike.objects.create(post=self, user=user) if not pl_list.exists() else pl_list.delete()
+            # 파이썬 삼항연산자
+            # [True일 경우 실행할 구문] if 조건문 else [False일 경우 실행할 구문]
+            # return PostLike.objects.create(post=self, user=user) if not pl_list.exists() else pl_list.delete()
 
     def add_comment(self, user, content):
         # 자신에게 연결된 Comment 객체의 역참조 매니저(comment_set)로 부터
