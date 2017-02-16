@@ -5,7 +5,9 @@
     {% for post in posts %}
         {{ post.id }}|{{ post.author.username}}</br>
         <!-- {{ post.photo }}는 이미지 상대 경로만 가지고 있다 -->
-        <img src="{{ MEDIA_URL }}{{ post.photo }}"><br>
+        <a href=" {% url 'post:detail' post_id=post.id %}">
+            <img src="{{ MEDIA_URL }}{{ post.photo }}">
+        </a><br>
         <!-- linebreaksbr: 문단 br 추가, truncatechars 추가 -->
         {{ post.content|linebreaksbr|truncatechars:100 }}<br>
         <!-- 각 Post object에 comment 목록을 추가 -->

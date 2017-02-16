@@ -22,9 +22,10 @@ Post Detail에 댓글 작성기능 추가
 4. 위 내용들과 content를 사용해서 Comment 객체 생성 및 저장
 5. 다시 아까 페이지 (Post Detail)로 redirect
 """
-
 from django.shortcuts import render, redirect
+
 from .models import Post, Comment
+from .forms import CommentForm, LikeForm
 
 
 def post_list(request):
@@ -37,25 +38,45 @@ def post_list(request):
 
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
+    comment_form = CommentForm()
     context = {
-        'post': post
+        'post': post,
+        'comment_form': comment_form,
     }
     return render(request, 'post/post_detail.html', context)
 
 
 def comment_add(request, post_id):
     if request.method == 'POST':
-        content = request.POST['content']
-        # 세션 미들위어가 request에 user객체를 넣어 보내줌
-        user = request.user
+        form = CommentForm(data=request.POST)
+
+        if form.is_valid():
+            content = form.cleaned_data['content']
+
+            # 세션 미들위어가 request에 user객체를 넣어 보내줌
+            user = request.user
+            post = Post.objects.get(id=post_id)
+
+            # 아래와 동일한데 모델에 구현한 기능을 사용
+            # post.add_comment(user, content)
+
+            Comment.objects.create(
+                author=user,
+                post=post,
+                content=content,
+            )
+        return redirect('post:detail', post_id=post_id)
+
+
+def post_like_toggle(request, post_id):
+    if request.method == 'POST':
         post = Post.objects.get(id=post_id)
+        post.toggle_like(user=request.user)
+        return redirect('post:detail', post_id=post_id)
 
-        # 아래와 동일한데 모델에 구현한 기능을 사용
-        # post.add_comment(user, content)
 
-        Comment.objects.create(
-            author=user,
-            post=post,
-            content=content,
-        )
+def comment_delete(request, post_id, comment_id):
+    if request.method == 'POST':
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
         return redirect('post:detail', post_id=post_id)
