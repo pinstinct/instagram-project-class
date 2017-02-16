@@ -25,7 +25,7 @@ Post Detail에 댓글 작성기능 추가
 from django.shortcuts import render, redirect
 
 from .models import Post, Comment
-from .forms import CommentForm, LikeForm
+from .forms import CommentForm, PostForm
 
 
 def post_list(request):
@@ -44,6 +44,33 @@ def post_detail(request, post_id):
         'comment_form': comment_form,
     }
     return render(request, 'post/post_detail.html', context)
+
+
+def post_add(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = Post(
+                author=request.user,
+                content=form.cleaned_data['content'],
+                photo=request.FILES['photo']
+            )
+            post.save()
+            return redirect('post:list')
+    else:
+        form = PostForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'post/post_add.html', context)
+
+
+def post_delete(request, post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.delete()
+        return redirect('post:list')
 
 
 def comment_add(request, post_id):
@@ -65,18 +92,18 @@ def comment_add(request, post_id):
                 post=post,
                 content=content,
             )
-        return redirect('post:detail', post_id=post_id)
+        return redirect('post:list')
 
 
 def post_like_toggle(request, post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
         post.toggle_like(user=request.user)
-        return redirect('post:detail', post_id=post_id)
+        return redirect('post:list')
 
 
 def comment_delete(request, post_id, comment_id):
     if request.method == 'POST':
         comment = Comment.objects.get(id=comment_id)
         comment.delete()
-        return redirect('post:detail', post_id=post_id)
+        return redirect('post:list')
