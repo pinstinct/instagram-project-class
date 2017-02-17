@@ -38,7 +38,8 @@ __all__ = (
 
 
 def post_list(request):
-    posts = Post.objects.all()
+    # posts = Post.objects.filter(is_visible=True)
+    posts = Post.visible.all()
     context = {
         'posts': posts
     }
@@ -75,11 +76,15 @@ def post_add(request):
     return render(request, 'post/post_add.html', context)
 
 
-def post_delete(request, post_id):
+def post_delete(request, post_id, db_delete=False):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
         if post.author.id == request.user.id:
-            post.delete()
+            if db_delete:
+                post.delete()
+            else:
+                post.is_visible = False
+                post.save()
         return redirect('post:list')
 
 

@@ -9,6 +9,17 @@ __all__ = (
 )
 
 
+# 둘 중에 편한 방식을 사용하면 됨 (두 가지 방식이 있음)
+class PostManager(models.Manager):
+    def visible(self):
+        return super().get_queryset().filter(is_visible=True)
+
+
+class PostUserVisibleManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_visible=True)
+
+
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     photo = models.ImageField(upload_to='post', blank=True)
@@ -19,6 +30,16 @@ class Post(models.Model):
         through='PostLike',
         related_name='like_post_set',
     )
+    is_visible = models.BooleanField(default=True)
+
+    # Default 모델 매니저 교체
+    objects = PostManager()
+    # 커스텀 모델 매니저 추가
+    visible = PostUserVisibleManager()
+
+    # Post.obejcts.all() : 모든것 보임
+    # Post.objecst.visible() : 디폴트 모델 매니져 교체
+    # Post.visibles.all() : 커스텀 추가
 
     def __str__(self):
         return 'Post[{}]'.format(self.id)
