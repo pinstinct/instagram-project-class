@@ -9,8 +9,8 @@
                 {% if post.author == request.user %}
                 <form action="{% url 'post:delete' post_id=post.id %}"
                       method="POST"
-                      style="display: inline-block">{% csrf_token %}
-                    <button>삭제</button>
+                      class="inline">{% csrf_token %}
+                    <button type="submit" class="btn">삭제</button>
                 </form>
                 {% endif %}
             <span class="header-date">{{ post.created_date }}</span>
@@ -42,12 +42,12 @@
                     <div class="post-comment">
                         <span class="comment-author">{{ comment.author }}</span>
                         <span class="comment-content">{{ comment.content }}</span>
-                        {% if comment.author == request.user%}
-                            <form action="{% url 'post:comment_delete' post_id=post.id comment_id=comment.id %}"
-                                  method="POST"
-                                  style="display: inline-block">{% csrf_token %}
-                                <button>삭제</button>
-                            </form>
+                        {% if comment.author == user%}
+                        <form action="{% url 'post:comment_delete' post_id=post.id comment_id=comment.id %}"
+                              method="POST"
+                              class="inline">{% csrf_token %}
+                            <button type="submit" class="btn">삭제</button>
+                        </form>
                         {% endif %}
                     </div>
                 {% endfor %}

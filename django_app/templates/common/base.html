@@ -7,6 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Instagram</title>
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'css/sprites.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/common.min.css' %}">
@@ -26,7 +27,7 @@
         <header class="main-header">
             <nav class="header-nav">
                 <span class="nav-group nav-left">
-                    <a href="/post" class="logo sprite-logo"></a>
+                    <a href="{% url 'post:list' %}" class="logo sprite-logo"></a>
                 </span>
                 <span class="nav-group nav-center">
                     <input type="text">

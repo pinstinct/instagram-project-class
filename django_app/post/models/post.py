@@ -1,9 +1,16 @@
+from django.conf import settings
 from django.db import models
+
 from member.models import MyUser
+
+__all__ = (
+    'Post',
+    'PostLike',
+)
 
 
 class Post(models.Model):
-    author = models.ForeignKey(MyUser)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
     photo = models.ImageField(upload_to='post', blank=True)
     content = models.TextField(blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -56,22 +63,8 @@ class Post(models.Model):
         return self.comment_set.count()
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(MyUser)
-    post = models.ForeignKey(Post)
-    content = models.TextField()
-    created_date = models.DateField(auto_now=True)
-
-    def __str__(self):
-        return 'Post[{}]\'s Comment[{}], Author[{}]'.format(
-            self.post_id,
-            self.id,
-            self.author_id,
-        )
-
-
 class PostLike(models.Model):
-    user = models.ForeignKey(MyUser)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     post = models.ForeignKey(Post)
     created_date = models.DateTimeField(auto_now=True)
 

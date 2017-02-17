@@ -24,8 +24,17 @@ Post Detail에 댓글 작성기능 추가
 """
 from django.shortcuts import render, redirect
 
-from .models import Post, Comment
-from .forms import CommentForm, PostForm
+from post.forms import CommentForm, PostForm
+from post.models import Post
+
+# import * 했을 때, 가져올 것을 선언
+__all__ = (
+    'post_list',
+    'post_detail',
+    'post_like_toggle',
+    'post_add',
+    'post_delete',
+)
 
 
 def post_list(request):
@@ -69,29 +78,8 @@ def post_add(request):
 def post_delete(request, post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
-        post.delete()
-        return redirect('post:list')
-
-
-def comment_add(request, post_id):
-    if request.method == 'POST':
-        form = CommentForm(data=request.POST)
-
-        if form.is_valid():
-            content = form.cleaned_data['content']
-
-            # 세션 미들위어가 request에 user객체를 넣어 보내줌
-            user = request.user
-            post = Post.objects.get(id=post_id)
-
-            # 아래와 동일한데 모델에 구현한 기능을 사용
-            # post.add_comment(user, content)
-
-            Comment.objects.create(
-                author=user,
-                post=post,
-                content=content,
-            )
+        if post.author.id == request.user.id:
+            post.delete()
         return redirect('post:list')
 
 
@@ -99,11 +87,4 @@ def post_like_toggle(request, post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
         post.toggle_like(user=request.user)
-        return redirect('post:list')
-
-
-def comment_delete(request, post_id, comment_id):
-    if request.method == 'POST':
-        comment = Comment.objects.get(id=comment_id)
-        comment.delete()
         return redirect('post:list')
