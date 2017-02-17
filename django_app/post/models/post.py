@@ -23,7 +23,7 @@ class PostUserVisibleManager(models.Manager):
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     photo = models.ImageField(upload_to='post', blank=True)
-    content = models.TextField(blank=True)
+    # content = models.TextField(blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     like_users = models.ManyToManyField(
         MyUser,
