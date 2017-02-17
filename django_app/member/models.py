@@ -41,7 +41,7 @@ class MyUser(PermissionsMixin, AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
-    object = MyUserManager()
+    objects = MyUserManager()
 
     def get_full_name(self):
         return '{} ({})'.format(
