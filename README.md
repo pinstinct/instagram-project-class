@@ -7,13 +7,11 @@
 4. 코멘트 남기기
 5. 로그인 하기 (Custom User Model 생성)
 6. 회원 가입
-+) CSS 
+7. CSS 
 
 # 프로젝트 관리
 
-- 프로젝트 명 : instagram
-- 어플리케이션 : member, post
-```
+```shell
 .
 ├── README.md
 ├── django_app
