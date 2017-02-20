@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from post.models import Post
 from .forms import LoginForm, SignupForm
 
 """
@@ -75,8 +77,21 @@ def signup_fbv(request):
     return render(request, 'member/signup.html', context)
 
 
+@login_required
 def profile(request):
+    """
+    자신의 게시물 수, 자신의 팔로워 수 자신의, 자신의 팔로잉 수
+    context로 전달하여 출력
+    :param request:
+    :return:
+    """
+    post_count = Post.objects.filter(author=request.user).count()
+    follower_count = request.user.follower_set.count()
+    following_count = request.user.following.count()
     context = {
+        'post_count': post_count,
+        'follower_count': follower_count,
+        'following_count': following_count,
     }
     return render(request, 'member/profile.html', context)
 
