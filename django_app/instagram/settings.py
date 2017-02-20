@@ -18,6 +18,9 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 # 사용자가 업로드한 파일들을 관리할 폴더의 경로 지정
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+# 정적 파일을 모아서 서빙할 폴더 경로 지정
+# 테스트 server 관련 에러 날 경우 반드시 추가해야 함
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
