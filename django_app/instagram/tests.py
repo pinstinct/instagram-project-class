@@ -22,7 +22,7 @@ class IndexTest(LiveServerTestCase):
         MyUser.objects.create_user(test_username, test_password)
 
         # member:login으로 POST요청을 보낸다. (self.client.post)
-        # views의 login_fbv 함수 참고 
+        # views의 login_fbv 함수 참고
         self.client.post(
             '/member/login/',
             {
