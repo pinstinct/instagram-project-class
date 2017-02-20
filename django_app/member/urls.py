@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^signup/$', views.signup_fbv, name='signup'),
     url(r'^logout/$', views.logout_fbv, name='logout'),
     url(r'^profile/$', views.profile, name='profile'),
+    url(r'^profile/image/$', views.change_profile_image, name='profile_image')
 ]

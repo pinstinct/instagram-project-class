@@ -2,8 +2,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from member.models import MyUser
 from post.models import Post
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, ProfileImageForm
 
 """
 1. def login 뷰를 생성
@@ -77,6 +78,11 @@ def signup_fbv(request):
     return render(request, 'member/signup.html', context)
 
 
+def logout_fbv(request):
+    logout(request)
+    return redirect('member:login')
+
+
 @login_required
 def profile(request):
     """
@@ -96,6 +102,31 @@ def profile(request):
     return render(request, 'member/profile.html', context)
 
 
-def logout_fbv(request):
-    logout(request)
-    return redirect('member:login')
+def change_profile_image(request):
+    """
+    해당 유저의 프로필 이미지를 바꾼다.
+    0. 유저 모델에 img_profile 필드 추가, migrations
+    1. change_profile_image.html 파일 작성
+    2. ProfileImageForm 생성
+    3. 해당 Form을 템플릿에 렌더링
+    4. request.method == 'POST'일 때 reqest.FILES의 값을 이용해서
+    request.user의 img_profile을 변경 저장
+    5. 처리 완료 후 member:profile 이동
+    6. profile.html에서 user의 프로필 이미지를 img태그를 사용해서 보여줌
+    {{ MEDIA_URL }}을 사용
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST, request.FILES)
+        user = request.user
+        if form.is_valid():
+            user.img_profile = request.FILES['img_profile']
+            user.save()
+            return redirect('member:profile')
+    else:
+        form = ProfileImageForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'member/change_profile_image.html', context)

@@ -4,6 +4,10 @@ from django.contrib.auth.password_validation import validate_password
 from .models import MyUser
 
 
+class ProfileImageForm(forms.Form):
+    img_profile = forms.ImageField()
+
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50)
     password = forms.CharField(

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-top">
-      <img src="" alt="" class="img-profile">
+      <img src="{{ MEDIA_URL}}{{ user.img_profile }}" alt="" class="img-profile">
       <div class="profile-text">
         <span class="profile-username">{{ user.username }}</span>
         <a class="btn">프로필 편집</a>

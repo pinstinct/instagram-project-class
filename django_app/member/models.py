@@ -44,6 +44,10 @@ class MyUser(PermissionsMixin, AbstractBaseUser):
         related_name='follower_set',
     )
     is_staff = models.BooleanField(default=False)
+    img_profile = models.ImageField(
+        upload_to='profile',
+        blank=True,
+    )
 
     USERNAME_FIELD = 'username'
     objects = MyUserManager()
