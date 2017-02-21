@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from member.models import MyUser
 from post.models import Post
 from .forms import LoginForm, SignupForm, ProfileImageForm
 
@@ -102,6 +101,7 @@ def profile(request):
     return render(request, 'member/profile.html', context)
 
 
+@login_required
 def change_profile_image(request):
     """
     해당 유저의 프로필 이미지를 바꾼다.

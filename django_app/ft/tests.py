@@ -105,3 +105,49 @@ class ProfilTest(BaseTestCase):
             unit='명',
             num=num
         )
+
+
+class LoginRequiredTest(BaseTestCase):
+    def logout_user_redirect_to_where(self, where):
+        test_url = where
+        self.browser.get(self.make_url(test_url))
+        return self.assertEqual(
+            '{}/member/login/?next={}'.format(self.live_server_url, test_url),
+            self.browser.current_url
+        )
+
+    def login_user_redirect_to_where(self, where):
+        test_url = where
+        self.make_user_and_login()
+        self.browser.get(self.make_url(test_url))
+        return self.assertEqual(self.make_url(test_url), self.browser.current_url)
+
+    def test_profile_logout_user(self):
+        return self.logout_user_redirect_to_where('/member/profile/')
+
+    def test_profile_login_user(self):
+        return self.login_user_redirect_to_where('/member/profile/')
+
+    def test_change_profile_logout_user(self):
+        return self.logout_user_redirect_to_where('/member/profile/image/')
+
+    def test_change_profile_login_user(self):
+        return self.login_user_redirect_to_where('/member/profile/image/')
+
+    def test_post_list_logout_user(self):
+        return self.logout_user_redirect_to_where('/post/')
+
+    def test_post_list_login_user(self):
+        return self.login_user_redirect_to_where('/post/')
+
+    def test_post_add_logout_user(self):
+        return self.logout_user_redirect_to_where('/post/add/')
+
+    def test_post_add_login_user(self):
+        return self.login_user_redirect_to_where('/post/add/')
+
+    def test_post_detail_logout_user(self):
+        return self.logout_user_redirect_to_where('/post/100/')
+
+    def test_post_detail_login_user(self):
+        return self.login_user_redirect_to_where('/post/100/')

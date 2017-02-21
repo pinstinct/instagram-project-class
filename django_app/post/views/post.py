@@ -22,6 +22,7 @@ Post Detail에 댓글 작성기능 추가
 4. 위 내용들과 content를 사용해서 Comment 객체 생성 및 저장
 5. 다시 아까 페이지 (Post Detail)로 redirect
 """
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from post.forms import CommentForm, PostForm
@@ -37,6 +38,7 @@ __all__ = (
 )
 
 
+@login_required
 def post_list(request):
     # posts = Post.objects.filter(is_visible=True)
     posts = Post.visible.all()
@@ -46,6 +48,7 @@ def post_list(request):
     return render(request, 'post/post_list.html', context)
 
 
+@login_required
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
     comment_form = CommentForm()
@@ -56,6 +59,7 @@ def post_detail(request, post_id):
     return render(request, 'post/post_detail.html', context)
 
 
+@login_required
 def post_add(request):
     def create_post_comment(file, comment_content):
         post = Post(author=request.user, photo=file)
