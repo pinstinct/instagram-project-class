@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from post.models import Post
-from .forms import LoginForm, SignupForm, ProfileImageForm
+from .forms import LoginForm, SignupForm, ChangeProfileImageModelForm, SignupModelForm
 
 """
 1. def login 뷰를 생성
@@ -77,6 +77,22 @@ def signup_fbv(request):
     return render(request, 'member/signup.html', context)
 
 
+# model form 구현 예제
+def signup_model_form_fbv(request):
+    if request.method == 'POST':
+        form = SignupModelForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('post:list')
+    else:
+        form = SignupModelForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'member/signup.html', context)
+
+
 def logout_fbv(request):
     logout(request)
     return redirect('member:login')
@@ -118,14 +134,18 @@ def change_profile_image(request):
     :return:
     """
     if request.method == 'POST':
-        form = ProfileImageForm(request.POST, request.FILES)
-        user = request.user
+        # instance에 request.user를 넣어 기존 인스턴스의 필드를 수정하도록 함
+        form = ChangeProfileImageModelForm(
+            instance=request.user,
+            data=request.POST,
+            files=request.FILES
+        )
         if form.is_valid():
-            user.img_profile = request.FILES['img_profile']
-            user.save()
+            form.save()
             return redirect('member:profile')
     else:
-        form = ProfileImageForm()
+        # instance에 request.user를 넣어 템플릿
+        form = ChangeProfileImageModelForm(instance=request.user)
     context = {
         'form': form
     }
